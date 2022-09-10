@@ -3,7 +3,8 @@ from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from app.database import Base
 
-
+# Database model -> defines the columns of the table
+# Used to run queries in the database
 class Post(Base):
     __tablename__ = "posts"
 
