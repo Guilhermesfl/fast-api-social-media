@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 # Schema/Pydantic model -> define structure of a request & response
@@ -9,3 +10,11 @@ class PostBase(BaseModel):
 
 class PostCreate(PostBase):
     pass
+
+
+class Post(PostBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
