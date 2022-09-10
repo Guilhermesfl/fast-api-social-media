@@ -4,7 +4,7 @@ from psycopg2.extras import RealDictCursor
 import time
 from app import models
 from app.database import engine
-from .routers import post, user, auth
+from .routers import user, auth, post
 
 models.Base.metadata.create_all(bind=engine)
 
