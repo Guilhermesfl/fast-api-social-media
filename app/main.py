@@ -4,7 +4,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 from sqlalchemy.orm import Session
-from app import models, schemas
+from app import models, schemas, utils
 from app.database import engine, get_db
 
 models.Base.metadata.create_all(bind=engine)
@@ -28,23 +28,6 @@ while True:
         print("Connecting to databse failed")
         print("Error: ", error)
         time.sleep(2)
-
-my_posts = [
-    {"title": "NY Parks", "content": "Central Park", "id": 1},
-    {"title": "LA Foods", "content": "Florida Burger", "id": 2},
-]
-
-
-def find_post(id):
-    for p in my_posts:
-        if p["id"] == id:
-            return p
-
-
-def find_index_post(id):
-    for idx, p in enumerate(my_posts):
-        if p["id"] == id:
-            return idx
 
 
 @app.get("/")
@@ -110,6 +93,9 @@ def update_post(
 
 @app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    # hash password - user.password
+    hashed_pwd = utils.hash(user.password)
+    user.password = hashed_pwd
     new_user = models.User(**user.dict())
     db.add(new_user)
     db.commit()
