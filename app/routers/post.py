@@ -11,7 +11,7 @@ router = APIRouter(prefix="/posts", tags=["Posts"])
 def get_posts(
     db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)
 ):
-    print(current_user.email)
+
     posts = db.query(models.Post).all()
     return posts
 
@@ -22,7 +22,7 @@ def create_posts(
     db: Session = Depends(get_db),
     current_user: int = Depends(oauth2.get_current_user),
 ):
-    new_post = models.Post(**post.dict())
+    new_post = models.Post(owner_id=current_user.id, **post.dict())
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
